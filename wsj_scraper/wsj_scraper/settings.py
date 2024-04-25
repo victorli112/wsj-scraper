@@ -11,7 +11,7 @@ BOT_NAME = "wsj_scraper"
 
 SPIDER_MODULES = ["wsj_scraper.spiders"]
 NEWSPIDER_MODULE = "wsj_scraper.spiders"
-handle_httpstatus_list = [401]
+# handle_httpstatus_list = [401]
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
@@ -19,7 +19,7 @@ handle_httpstatus_list = [401]
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
-LOG_LEVEL = 'INFO'
+LOG_LEVEL = 'ERROR'
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 CONCURRENT_REQUESTS = 32
@@ -45,7 +45,6 @@ DEFAULT_REQUEST_HEADERS = {
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
     'Accept-Encoding': 'identity',
     'Accept-Language': 'en',
-    'Referrer-Policy': 'origin',
 }
 
 # Enable or disable spider middlewares
@@ -58,11 +57,11 @@ DEFAULT_REQUEST_HEADERS = {
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-DOWNLOADER_MIDDLEWARES = {
-   #"wsj_scraper.middlewares.WsjScraperDownloaderMiddleware": 543,
-    "scrapy_selenium.SeleniumMiddleware": 800
-}
-SELENIUM_DRIVER_ARGUMENTS = [] 
+# DOWNLOADER_MIDDLEWARES = {
+#    #"wsj_scraper.middlewares.WsjScraperDownloaderMiddleware": 543,
+#     "scrapy_selenium.SeleniumMiddleware": 800
+# }
+# SELENIUM_DRIVER_ARGUMENTS = [] 
 
 
 # Enable or disable extensions

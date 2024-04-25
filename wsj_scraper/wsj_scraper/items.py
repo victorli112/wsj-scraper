@@ -10,3 +10,6 @@ class WsjScraperItem(scrapy.Item):
     title = scrapy.Field()
     section = scrapy.Field()
     text = scrapy.Field()
+
+class FailedText(scrapy.Item):
+    title = scrapy.Field()

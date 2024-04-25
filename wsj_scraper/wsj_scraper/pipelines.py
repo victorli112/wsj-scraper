@@ -9,17 +9,26 @@ from itemadapter import ItemAdapter
 from openpyxl import Workbook
 import pandas as pd
 
+from wsj_scraper.items import FailedText
+
 
 class WsjScraperPipeline:
     def open_spider(self, spider):
         # open excel 
         self.df = pd.DataFrame(columns=['Date', 'Title', 'Section', 'Text'])
+        self.no_archived_article = 0
         
     def close_spider(self, spider):
         # save df to excel
         self.df.to_excel('wsj_data.xlsx', index=False)
+        print(f"Number of articles scraped: {len(self.df)}")
+        print(f"Number of articles not archived: {self.no_archived_article}")
     
     def process_item(self, item, spider):
+        if isinstance(item, FailedText):
+            self.no_archived_article += 1
+            return item
+        
         new_df = pd.DataFrame({
             'Date': item['date'], 
             'Title': item['title'], 

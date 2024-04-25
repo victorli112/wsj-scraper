@@ -14,7 +14,7 @@ SELENIUM_OPTIONS = Options()
 SELENIUM_OPTIONS.add_argument("--window-size=1920,1080")
 SELENIUM_OPTIONS.add_argument("--start-maximized")
 SELENIUM_OPTIONS.add_argument("user-data-dir=/tmp/wsj_login")
-SELENIUM_OPTIONS.add_argument("--enable-javascript")
+# SELENIUM_OPTIONS.add_argument("--enable-javascript")
 # SELENIUM_OPTIONS.add_argument("--headless=new")
 SELENIUM_OPTIONS.binary_location = "/usr/bin/chromium-browser"
 SELENIUM_OPTIONS.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36")
@@ -23,8 +23,9 @@ class WSJ_Scraper:
     def __init__(self):
         self.driver = webdriver.Chrome(options=SELENIUM_OPTIONS)
         self.data = []
+        #print(self.get_free_proxies())
         self.login_wsj()
-    
+
     def login_wsj(self):
         self.driver.get("https://www.wsj.com/login")
         time.sleep(120)
