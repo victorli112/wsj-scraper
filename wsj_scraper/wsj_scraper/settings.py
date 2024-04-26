@@ -22,7 +22,7 @@ ROBOTSTXT_OBEY = False
 LOG_LEVEL = 'ERROR'
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-CONCURRENT_REQUESTS = 32
+CONCURRENT_REQUESTS = 16
 
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
@@ -41,11 +41,12 @@ CONCURRENT_REQUESTS_PER_IP = 16
 # Override the default request headers:
 DEFAULT_REQUEST_HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0',
-    'Referer': 'https://www.wsj.com/news/archive/',
+    'Referer': 'https://www.google.com',
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
     'Accept-Encoding': 'identity',
-    'Accept-Language': 'en',
 }
+USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36'
+
 
 # Enable or disable spider middlewares
 # See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
@@ -58,8 +59,8 @@ DEFAULT_REQUEST_HEADERS = {
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 # DOWNLOADER_MIDDLEWARES = {
-#    #"wsj_scraper.middlewares.WsjScraperDownloaderMiddleware": 543,
-#     "scrapy_selenium.SeleniumMiddleware": 800
+#    "wsj_scraper.middlewares.WsjScraperDownloaderMiddleware": 543,
+#  #   "scrapy_selenium.SeleniumMiddleware": 800
 # }
 # SELENIUM_DRIVER_ARGUMENTS = [] 
 

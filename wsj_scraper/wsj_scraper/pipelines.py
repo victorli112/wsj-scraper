@@ -15,28 +15,31 @@ from wsj_scraper.items import FailedText
 class WsjScraperPipeline:
     def open_spider(self, spider):
         # open excel 
-        self.df = pd.DataFrame(columns=['Date', 'Title', 'Section', 'Text'])
+        self.data = []
+        self.seen = set()
         self.no_archived_article = 0
         
     def close_spider(self, spider):
-        # save df to excel
-        self.df.to_excel('wsj_data.xlsx', index=False)
-        print(f"Number of articles scraped: {len(self.df)}")
+        print(f"Number of articles scraped: {len(self.data)}")
         print(f"Number of articles not archived: {self.no_archived_article}")
+        print("Saving...")
+        df = pd.DataFrame(self.data)
+        df.to_excel("wsj_data.xlsx", index=False)
     
     def process_item(self, item, spider):
+        if (item['title'],item['date']) in self.seen:
+            return item
+        self.seen.add((item['title'],item['date']))
+        
         if isinstance(item, FailedText):
+            print(f"[ARCHIVING-F] Total: {self.no_archived_article} | Failed to scrape article: {item['title']}")
             self.no_archived_article += 1
-            if self.no_archived_article % 10 == 0:
-                print(f"Number of articles not archived: {self.no_archived_article}")
             return item
         
-        new_df = pd.DataFrame({
-            'Date': item['date'], 
-            'Title': item['title'], 
-            'Section': item['section'], 
-            'Text': item['text']
-            }, index=[0])
-        self.df = pd.concat([self.df, new_df], ignore_index=True)
-        if len(self.df) % 10 == 0:
-            print(f"Number of articles scraped: {len(self.df)}")
+        print(f"[ARCHIVING] Total: {len(self.seen)} | Scraped article: {item['title']}")
+        self.data.append({
+            'date': item['date'], 
+            'title': item['title'], 
+            'section': item['section'], 
+            'text': item['text']
+        })

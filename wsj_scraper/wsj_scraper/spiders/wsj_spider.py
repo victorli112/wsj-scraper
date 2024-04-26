@@ -1,6 +1,5 @@
 from bs4 import BeautifulSoup
 import scrapy
-from scrapy_selenium import SeleniumRequest
 from wsj_scraper.items import FailedText, WsjScraperItem
 
 BASE_WSJ = "https://www.wsj.com"
@@ -9,8 +8,6 @@ ARCHIVE_URL = "https://archive.is/"
 # do the same as scrape_prh.py but with scrapy
 class spiders(scrapy.Spider):
     name = "wsj-scraper"
-    parsed = 0
-    days = 0
     start_urls = ["https://www.wsj.com/news/archive/years"]
     
     def parse(self, response):
@@ -31,10 +28,8 @@ class spiders(scrapy.Spider):
 
         hrefs = [a['href'] for a in block.find_all('a', href=True)]
         for href in hrefs:
-            if self.days > 3:
-                break
-            self.days += 1
             yield scrapy.Request(BASE_WSJ + href, callback=self.parse_daily_links)
+            break
     
     # ex input link: https://www.wsj.com/news/archive/2021/01/01
     def parse_daily_links(self, response):
@@ -45,16 +40,13 @@ class spiders(scrapy.Spider):
         soup = BeautifulSoup(response.body, 'lxml')
         # find all articles in the page
         articles = soup.find_all('div', class_='WSJTheme--overflow-hidden--qJmlzHgO')
-        print("[DAY] on date", date, "found", len(articles), "articles")
-        for article in articles:
-            if self.parsed > 200:
-                break
+        for article in articles[:5]:
             title = article.find('span', class_='WSJTheme--headlineText--He1ANr9C').text
             section = article.find('div', class_='WSJTheme--articleType--34Gt-vdG').text
             date = date
             article_link = article.find('span', class_='WSJTheme--headlineText--He1ANr9C').parent['href']
-            yield SeleniumRequest(url=f'{ARCHIVE_URL}{article_link}', callback=self.find_archived_text, meta={'title': title, 'section': section, 'date': date})
-        
+            yield scrapy.Request(url=f'{ARCHIVE_URL}{article_link}', callback=self.find_archived_text, meta={'title': title, 'section': section, 'date': date})
+            
         # if there is a next page, go to it
         next_page = soup.find('span', text='Next Page')
         if next_page:
@@ -76,14 +68,9 @@ class spiders(scrapy.Spider):
         soup = BeautifulSoup(response.body, 'lxml')
         first_row = soup.find('div', id='row0')
         if not first_row:
-            # print("No archived link")
             yield FailedText(title=response.meta['title'])
         else:
-            self.parsed += 1
-            if self.parsed % 10 == 0:
-                print("Parsed", self.parsed, "articles")
             archived_link = first_row.find('a')['href']
-            # print("archived link", archived_link)
             yield scrapy.Request(callback=self.parse_archived_article, url = archived_link, meta={'title': response.meta['title'], 'section': response.meta['section'], 'date': response.meta['date']})
     
     def parse_archived_article(self, response):
