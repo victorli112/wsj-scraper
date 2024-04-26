@@ -10,6 +10,7 @@ ARCHIVE_URL = "https://archive.is/"
 class spiders(scrapy.Spider):
     name = "wsj-scraper"
     parsed = 0
+    days = 0
     start_urls = ["https://www.wsj.com/news/archive/years"]
     
     def parse(self, response):
@@ -30,6 +31,9 @@ class spiders(scrapy.Spider):
 
         hrefs = [a['href'] for a in block.find_all('a', href=True)]
         for href in hrefs:
+            if self.days > 3:
+                break
+            self.days += 1
             yield scrapy.Request(BASE_WSJ + href, callback=self.parse_daily_links)
     
     # ex input link: https://www.wsj.com/news/archive/2021/01/01
