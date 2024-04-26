@@ -27,6 +27,8 @@ class WsjScraperPipeline:
     def process_item(self, item, spider):
         if isinstance(item, FailedText):
             self.no_archived_article += 1
+            if self.no_archived_article % 10 == 0:
+                print(f"Number of articles not archived: {self.no_archived_article}")
             return item
         
         new_df = pd.DataFrame({
@@ -36,3 +38,5 @@ class WsjScraperPipeline:
             'Text': item['text']
             }, index=[0])
         self.df = pd.concat([self.df, new_df], ignore_index=True)
+        if len(self.df) % 10 == 0:
+            print(f"Number of articles scraped: {len(self.df)}")

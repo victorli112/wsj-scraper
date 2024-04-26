@@ -8,10 +8,6 @@ ARCHIVE_URL = "https://archive.is/"
 
 # do the same as scrape_prh.py but with scrapy
 class spiders(scrapy.Spider):
-    # handle_httpstatus_list = [401]
-    # custom_settings = {
-    #     "handle_httpstatus_list": [401],
-    # }
     name = "wsj-scraper"
     start_urls = ["https://www.wsj.com/news/archive/years"]
     
@@ -39,6 +35,8 @@ class spiders(scrapy.Spider):
     def parse_daily_links(self, response):
         request_url = response.request.url
         date = f'{request_url.split("/")[-3]}-{request_url.split("/")[-2]}-{request_url.split("/")[-1]}'
+        if '?' in date:
+            date = date.split('?')[0]
         soup = BeautifulSoup(response.body, 'lxml')
         # find all articles in the page
         articles = soup.find_all('div', class_='WSJTheme--overflow-hidden--qJmlzHgO')
