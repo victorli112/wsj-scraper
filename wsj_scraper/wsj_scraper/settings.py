@@ -19,7 +19,9 @@ NEWSPIDER_MODULE = "wsj_scraper.spiders"
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
-LOG_LEVEL = 'ERROR'
+LOG_LEVEL = 'INFO'
+RETRY_HTTP_CODES = [429]
+
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 CONCURRENT_REQUESTS = 16
@@ -62,7 +64,10 @@ USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTM
 #    "wsj_scraper.middlewares.WsjScraperDownloaderMiddleware": 543,
 #  #   "scrapy_selenium.SeleniumMiddleware": 800
 # }
-# SELENIUM_DRIVER_ARGUMENTS = [] 
+DOWNLOADER_MIDDLEWARES = {
+    'scrapy.downloadermiddlewares.retry.RetryMiddleware': None,
+    'wsj_scraper.middlewares.TooManyRequestsRetryMiddleware': 543,
+}
 
 
 # Enable or disable extensions
