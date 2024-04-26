@@ -9,6 +9,7 @@ ARCHIVE_URL = "https://archive.is/"
 # do the same as scrape_prh.py but with scrapy
 class spiders(scrapy.Spider):
     name = "wsj-scraper"
+    parsed = 0
     start_urls = ["https://www.wsj.com/news/archive/years"]
     
     def parse(self, response):
@@ -42,6 +43,8 @@ class spiders(scrapy.Spider):
         articles = soup.find_all('div', class_='WSJTheme--overflow-hidden--qJmlzHgO')
         print("[DAY] on date", date, "found", len(articles), "articles")
         for article in articles:
+            if self.parsed > 200:
+                break
             title = article.find('span', class_='WSJTheme--headlineText--He1ANr9C').text
             section = article.find('div', class_='WSJTheme--articleType--34Gt-vdG').text
             date = date
@@ -72,6 +75,9 @@ class spiders(scrapy.Spider):
             # print("No archived link")
             yield FailedText(title=response.meta['title'])
         else:
+            self.parsed += 1
+            if self.parsed % 10 == 0:
+                print("Parsed", self.parsed, "articles")
             archived_link = first_row.find('a')['href']
             # print("archived link", archived_link)
             yield scrapy.Request(callback=self.parse_archived_article, url = archived_link, meta={'title': response.meta['title'], 'section': response.meta['section'], 'date': response.meta['date']})
