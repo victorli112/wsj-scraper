@@ -19,7 +19,7 @@ NEWSPIDER_MODULE = "wsj_scraper.spiders"
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
-LOG_LEVEL = 'INFO'
+LOG_LEVEL = 'ERROR'
 RETRY_HTTP_CODES = [429]
 
 

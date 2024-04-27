@@ -40,7 +40,7 @@ class spiders(scrapy.Spider):
         soup = BeautifulSoup(response.body, 'lxml')
         # find all articles in the page
         articles = soup.find_all('div', class_='WSJTheme--overflow-hidden--qJmlzHgO')
-        for article in articles[:5]:
+        for article in articles:
             title = article.find('span', class_='WSJTheme--headlineText--He1ANr9C').text
             section = article.find('div', class_='WSJTheme--articleType--34Gt-vdG').text
             date = date
@@ -68,7 +68,7 @@ class spiders(scrapy.Spider):
         soup = BeautifulSoup(response.body, 'lxml')
         first_row = soup.find('div', id='row0')
         if not first_row:
-            yield FailedText(title=response.meta['title'])
+            yield FailedText(title=response.meta['title'], date=response.meta['date'])
         else:
             archived_link = first_row.find('a')['href']
             yield scrapy.Request(callback=self.parse_archived_article, url = archived_link, meta={'title': response.meta['title'], 'section': response.meta['section'], 'date': response.meta['date']})
