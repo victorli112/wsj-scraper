@@ -24,7 +24,7 @@ class WsjScraperPipeline:
         print(f"Number of articles not archived: {self.no_archived_article}")
         print("Saving...")
         df = pd.DataFrame(self.data)
-        df.to_excel("wsj_data.xlsx", index=False)
+        df.to_excel("wsj_data2.xlsx", index=False)
     
     def process_item(self, item, spider):
         if (item['title'],item['date']) in self.seen:
