@@ -17,7 +17,7 @@ class spiders(scrapy.Spider):
         # Get all the hrefs in the div block
         hrefs = [a['href'] for a in div_block.find_all('a', href=True)]
         
-        for href in hrefs:
+        for href in hrefs[:len(hrefs)//2]:
             yield scrapy.Request(BASE_WSJ + href, callback=self.parse_monthly_links)
             break
     
