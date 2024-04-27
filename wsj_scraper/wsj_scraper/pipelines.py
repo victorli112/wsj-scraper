@@ -32,7 +32,7 @@ class WsjScraperPipeline:
         self.seen.add((item['title'],item['date']))
         
         if isinstance(item, FailedText):
-            print(f"[ARCHIVING-F] Total: {self.no_archived_article} | Failed to scrape article: {item['title']}")
+            print(f"[ARCHIVING-F] Total: {self.no_archived_article} | Failed to scrape article: {item['title']} | Link {item['meta']}")
             self.no_archived_article += 1
             return item
         

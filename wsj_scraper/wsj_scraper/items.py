@@ -14,3 +14,4 @@ class WsjScraperItem(scrapy.Item):
 class FailedText(scrapy.Item):
     title = scrapy.Field()
     date = scrapy.Field()
+    meta = scrapy.Field()
