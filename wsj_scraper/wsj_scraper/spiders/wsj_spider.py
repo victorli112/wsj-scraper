@@ -19,7 +19,6 @@ class spiders(scrapy.Spider):
         
         for href in hrefs[len(hrefs)//2 - 10:]:
             yield scrapy.Request(BASE_WSJ + href, callback=self.parse_monthly_links)
-            break
     
     # ex input link: https://www.wsj.com/news/archive/2021/january
     def parse_monthly_links(self, response):
