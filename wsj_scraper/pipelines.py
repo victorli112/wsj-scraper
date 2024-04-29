@@ -37,7 +37,7 @@ class WsjScraperPipeline:
             self.no_archived_article += 1
             return item
         
-        print(f"[ARCHIVING] Total: {len(self.seen)} | Scraped article: {item['title']}")
+        print(f"[ARCHIVING] Total: {len(self.data)} | Scraped article: {item['title']}")
         self.data.append({
             'date': item['date'], 
             'title': item['title'], 
