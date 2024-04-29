@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 import scrapy
+from batch_settings import CURRENT_BATCH, NUM_BATCHES
 from wsj_scraper.items import FailedText, WsjScraperItem
 
 BASE_WSJ = "https://www.wsj.com"
@@ -17,7 +18,10 @@ class spiders(scrapy.Spider):
         # Get all the hrefs in the div block
         hrefs = [a['href'] for a in div_block.find_all('a', href=True)]
         
-        for href in hrefs[:len(hrefs)//2 - 10]:
+        # given the number of batches and current batch
+        start_index = (CURRENT_BATCH - 1) * len(hrefs) // NUM_BATCHES
+        end_index = CURRENT_BATCH * len(hrefs) // NUM_BATCHES
+        for href in hrefs[start_index:end_index]:
             yield scrapy.Request(BASE_WSJ + href, callback=self.parse_monthly_links)
     
     # ex input link: https://www.wsj.com/news/archive/2021/january

@@ -1,12 +1,17 @@
 import pandas as pd
-# combine two xlsx files into one
-def combine_xlsx_files(file1, file2, output_file):
-    df1 = pd.read_excel(file1)
-    df2 = pd.read_excel(file2)
-    df = pd.concat([df1, df2], ignore_index=True)
+from sys import argv
+
+# combine a list of xlsx files into one
+def combine_xlsx_files(output_file, files):
+    df = pd.DataFrame()
+    for file in files:
+        print("Reading", file)
+        df = pd.concat([df, pd.read_excel(file)], ignore_index=True)
     # remove all rows where text is an empty string
     df = df[df['text'] != '']
     df.to_excel(output_file, index=False)
-    print(len(df))
+    print("Length of combined file", len(df))
 
-combine_xlsx_files("wsj_data.xlsx", "wsj_data2.xlsx", "wsj_data_combined.xlsx")
+if __name__ == "__main__":
+    files = argv[1:]
+    combine_xlsx_files("combined_wsj.xlsx", files)

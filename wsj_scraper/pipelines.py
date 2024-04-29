@@ -9,6 +9,7 @@ from itemadapter import ItemAdapter
 from openpyxl import Workbook
 import pandas as pd
 
+from batch_settings import CURRENT_BATCH
 from wsj_scraper.items import FailedText
 
 
@@ -24,7 +25,7 @@ class WsjScraperPipeline:
         print(f"Number of articles not archived: {self.no_archived_article}")
         print("Saving...")
         df = pd.DataFrame(self.data)
-        df.to_excel("wsj_data3.xlsx", index=False)
+        df.to_excel(f"wsj_data{CURRENT_BATCH}.xlsx", index=False)
     
     def process_item(self, item, spider):
         if (item['title'],item['date']) in self.seen:
