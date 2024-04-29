@@ -63,7 +63,7 @@ class spiders(scrapy.Spider):
                 f.write(f"Failed to parse data: {response.request.url}\n{article}\n\n")
                 continue    
             yield scrapy.Request(url=f'{ARCHIVE_URL}{article_link}', callback=self.find_archived_text, meta={'title': title, 'section': section, 'date': date})
-            
+
         # if there is a next page, go to it
         next_page = soup.find('span', text='Next Page')
         if next_page:
@@ -82,8 +82,5 @@ class spiders(scrapy.Spider):
     
     def parse_archived_article(self, response):
         soup = BeautifulSoup(response.body, 'lxml')
-        all_paragraphs = soup.find_all('div', attrs={'data-type': 'paragraph'})
-        text = ""
-        for paragraph in all_paragraphs:
-            text += paragraph.text
+        text = soup.find('article').getText(separator=" ", strip=True)
         yield WsjScraperItem(title=response.meta['title'], section=response.meta['section'], date=response.meta['date'], text=text)
